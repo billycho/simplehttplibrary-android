@@ -1,53 +1,54 @@
 package com.qwersoft.httplibdemo;
 
 import android.graphics.Bitmap;
+import android.os.Environment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ImageView;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
-import com.qwersoft.simplehttplibrary.ImageRequest;
-import com.qwersoft.simplehttplibrary.JsonArrayRequest;
-import com.qwersoft.simplehttplibrary.JsonObjectRequest;
-import com.qwersoft.simplehttplibrary.Response;
+import java.util.ArrayList;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+public class MainActivity extends AppCompatActivity implements GalleryContract.View{
 
-public class MainActivity extends AppCompatActivity {
 
-    private ImageView imageView;
+
+    private RecyclerView recyclerView;
+    private GalleryPresenter galleryPresenter;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        imageView = (ImageView) findViewById(R.id.imageView);
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest("http://pastebin.com/raw/wgkJgazE","GET",null, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
+        recyclerView = (RecyclerView) findViewById(R.id.imagegallery);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this,2);
+        recyclerView.setLayoutManager(layoutManager);
 
-            }
-        });
+        galleryPresenter = new GalleryPresenter(this);
+        galleryPresenter.loadImages();
 
-        jsonArrayRequest.startRequest();
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest("http://api.androiddeft.com/json/employee.php", "GET", null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d("asdaxxx",response.toString());
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        galleryPresenter.loadImages();
 
-        jsonObjectRequest.startRequest();
+                    }
+                }
+        );
+    }
 
-        final ImageRequest imageRequest = new ImageRequest("http://theopentutorials.com/totwp331/wp-content/uploads/totlogo.png", new Response.Listener<Bitmap>() {
-            @Override
-            public void onResponse(Bitmap response) {
-                    imageView.setImageBitmap(response);
-            }
-        });
 
-        imageRequest.startRequest();
+    @Override
+    public void showImages(ArrayList<String> imageUrls) {
+        GalleryAdapter galleryAdapter = new GalleryAdapter(this, imageUrls);
+        recyclerView.setAdapter(galleryAdapter);
+        swipeRefreshLayout.setRefreshing(false);
     }
 }

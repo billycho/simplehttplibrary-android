@@ -6,6 +6,7 @@ package com.qwersoft.simplehttplibrary;
 
 public class Response {
     public interface Listener<T> {
+        void onProgress();
         void onResponse(T response);
     }
 }

@@ -131,7 +131,6 @@ public class JsonArrayRequest {
             for (int i = 0; i < response.length(); i++) {
                 try {
                     JSONObject a = (JSONObject) response.get(i);
-                    //Log.d("asdaxxxx",a.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
