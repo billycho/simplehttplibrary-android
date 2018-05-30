@@ -42,7 +42,7 @@ Library usage:
         jsonArrayRequest.startRequest();
         
         //ImageRequest
-        ImageRequest imageRequest = new ImageRequest(galleryList.get(position), new Response.Listener<Bitmap>() {
+        ImageRequest imageRequest = new ImageRequest("http://theopentutorials.com/totwp331/wp-content/uploads/totlogo.png", new Response.Listener<Bitmap>() {
             @Override
             public void onProgress() {
                 Log.d("asdaxxx","Processing" + galleryList.get(position));
