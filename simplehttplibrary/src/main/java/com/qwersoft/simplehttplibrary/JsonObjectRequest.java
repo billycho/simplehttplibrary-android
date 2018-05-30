@@ -126,7 +126,7 @@ public class JsonObjectRequest {
 
         @Override
         protected JSONObject doInBackground(String... strings) {
-
+            listener.onProgress();
             response = makeHttpRequest( url,method,null);
 
             return response;

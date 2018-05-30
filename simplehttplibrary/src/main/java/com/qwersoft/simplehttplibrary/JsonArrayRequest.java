@@ -126,7 +126,7 @@ public class JsonArrayRequest {
 
         @Override
         protected JSONArray doInBackground(String... strings) {
-
+            listener.onProgress();
             response = makeHttpRequest( url,method,null);
             for (int i = 0; i < response.length(); i++) {
                 try {
@@ -136,6 +136,8 @@ public class JsonArrayRequest {
                 }
 
             }
+
+
             return response;
         }
 
